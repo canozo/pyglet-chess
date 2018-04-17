@@ -5,15 +5,15 @@ import pyglet
 
 
 class Knight(Piece):
-    def __init__(self, is_white: bool, has_moved: bool=False, pinned: bool=False):
-        super(Knight, self).__init__(is_white, has_moved, pinned)
+    def __init__(self, is_white: bool, has_moved: bool=False):
+        super(Knight, self).__init__(is_white, has_moved)
         if self.is_white:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/knight-w.png'))
         else:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/knight-b.png'))
 
     def __deepcopy__(self, memodict):
-        return Knight(self.is_white, self.has_moved, self.pinned)
+        return Knight(self.is_white, self.has_moved)
 
     def check_laser(self, chessboard, x, y, check_mode):
         return []

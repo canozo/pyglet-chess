@@ -4,10 +4,9 @@ from typing import List, Tuple
 
 
 class Piece(ABC):
-    def __init__(self, is_white: bool, has_moved: bool, pinned: bool):
+    def __init__(self, is_white: bool, has_moved: bool):
         self.is_white = is_white
         self.has_moved = has_moved
-        self.pinned = pinned
         self.img = None
 
     def get_laser(self, movements: Tuple[int, ...], chessboard: List[List['Piece']],

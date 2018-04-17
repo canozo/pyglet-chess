@@ -9,8 +9,6 @@ from pieces.pawn import Pawn
 import itertools
 import copy
 
-# TODO evaluate function
-
 T = TypeVar('T', Piece, None)
 
 
@@ -29,41 +27,41 @@ class Board:
         self.chessboard = [[None for _ in range(8)] for _ in range(8)]  # type: List[List[T]]
 
         # initial position
-        self.chessboard[0][0] = Rook(True)
-        self.chessboard[0][1] = Knight(True)
-        self.chessboard[0][2] = Bishop(True)
-        self.chessboard[0][3] = Queen(True)
-        self.chessboard[0][4] = King(True)
-        self.chessboard[0][5] = Bishop(True)
-        self.chessboard[0][6] = Knight(True)
-        self.chessboard[0][7] = Rook(True)
+        self.chessboard[0][0] = Rook(False)
+        self.chessboard[0][1] = Knight(False)
+        self.chessboard[0][2] = Bishop(False)
+        self.chessboard[0][3] = Queen(False)
+        self.chessboard[0][4] = King(False)
+        self.chessboard[0][5] = Bishop(False)
+        self.chessboard[0][6] = Knight(False)
+        self.chessboard[0][7] = Rook(False)
 
-        self.chessboard[1][0] = Pawn(True)
-        self.chessboard[1][1] = Pawn(True)
-        self.chessboard[1][2] = Pawn(True)
-        self.chessboard[1][3] = Pawn(True)
-        self.chessboard[1][4] = Pawn(True)
-        self.chessboard[1][5] = Pawn(True)
-        self.chessboard[1][6] = Pawn(True)
-        self.chessboard[1][7] = Pawn(True)
+        self.chessboard[1][0] = Pawn(False)
+        self.chessboard[1][1] = Pawn(False)
+        self.chessboard[1][2] = Pawn(False)
+        self.chessboard[1][3] = Pawn(False)
+        self.chessboard[1][4] = Pawn(False)
+        self.chessboard[1][5] = Pawn(False)
+        self.chessboard[1][6] = Pawn(False)
+        self.chessboard[1][7] = Pawn(False)
 
-        self.chessboard[7][0] = Rook(False)
-        self.chessboard[7][1] = Knight(False)
-        self.chessboard[7][2] = Bishop(False)
-        self.chessboard[7][3] = Queen(False)
-        self.chessboard[7][4] = King(False)
-        self.chessboard[7][5] = Bishop(False)
-        self.chessboard[7][6] = Knight(False)
-        self.chessboard[7][7] = Rook(False)
+        self.chessboard[7][0] = Rook(True)
+        self.chessboard[7][1] = Knight(True)
+        self.chessboard[7][2] = Bishop(True)
+        self.chessboard[7][3] = Queen(True)
+        self.chessboard[7][4] = King(True)
+        self.chessboard[7][5] = Bishop(True)
+        self.chessboard[7][6] = Knight(True)
+        self.chessboard[7][7] = Rook(True)
 
-        self.chessboard[6][0] = Pawn(False)
-        self.chessboard[6][1] = Pawn(False)
-        self.chessboard[6][2] = Pawn(False)
-        self.chessboard[6][3] = Pawn(False)
-        self.chessboard[6][4] = Pawn(False)
-        self.chessboard[6][5] = Pawn(False)
-        self.chessboard[6][6] = Pawn(False)
-        self.chessboard[6][7] = Pawn(False)
+        self.chessboard[6][0] = Pawn(True)
+        self.chessboard[6][1] = Pawn(True)
+        self.chessboard[6][2] = Pawn(True)
+        self.chessboard[6][3] = Pawn(True)
+        self.chessboard[6][4] = Pawn(True)
+        self.chessboard[6][5] = Pawn(True)
+        self.chessboard[6][6] = Pawn(True)
+        self.chessboard[6][7] = Pawn(True)
 
         # iniial controlled squares
         self.update_controlled()
@@ -116,18 +114,18 @@ class Board:
                 legal = False
 
             # check if the player can promote
-            if legal and isinstance(piece, Pawn)\
-                    and ((self.white_turn and ny == 7) or (not self.white_turn and ny == 0)):
+            if legal and isinstance(piece, Pawn) \
+                    and ((self.white_turn and ny == 0) or (not self.white_turn and ny == 7)):
                 legal = self.can_promote(promote_to)
 
             # get ready for a possible en passant on next turn
             if not review_mode and legal and isinstance(piece, Pawn) and abs(y-ny) == 2:
                 flag_ep = True
                 self.en_passant_x = x
-                if self.white_turn and self.black_controlled[y+1][x]:
-                    self.en_passant_y = y+1
-                elif not self.white_turn and self.white_controlled[y-1][x]:
+                if self.white_turn and self.black_controlled[y-1][x]:
                     self.en_passant_y = y-1
+                elif not self.white_turn and self.white_controlled[y+1][x]:
+                    self.en_passant_y = y+1
 
             # if the player is in check, see if he manages to get out of check
             if legal and self.check():
@@ -145,12 +143,12 @@ class Board:
                     legal = False
 
                 # take the attacking piece
-                elif self.chessboard[ny][nx] is not None:
+                elif destination is not None:
                     if (ny, nx) != attacking_pieces[0]:
                         legal = False
 
                 # block the attacking piece
-                elif self.chessboard[ny][nx] is None:
+                elif destination is None:
                     ty, tx = attacking_pieces[0]
                     if (ny, nx) not in self.check_block(tx, ty):
                         legal = False
@@ -186,9 +184,9 @@ class Board:
         if self.en_passant and isinstance(self.chessboard[y][x], Pawn)\
                 and ny == self.en_passant_y and nx == self.en_passant_x:
             if self.white_turn:
-                self.chessboard[ny-1][nx] = None
-            else:
                 self.chessboard[ny+1][nx] = None
+            else:
+                self.chessboard[ny-1][nx] = None
 
         if self.promotion:
             if self.promote_to == 'queen':
