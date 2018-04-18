@@ -1,6 +1,7 @@
 from .piece import Piece
 from typing import List, Tuple
 import pyglet
+from PIL import Image
 
 
 class Bishop(Piece):
@@ -8,8 +9,10 @@ class Bishop(Piece):
         super(Bishop, self).__init__(is_white, has_moved)
         if self.is_white:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/bishop-w.png'))
+            self.pil_img = Image.open('resources/bishop-w.png')
         else:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/bishop-b.png'))
+            self.pil_img = Image.open('resources/bishop-b.png')
 
     def __deepcopy__(self, memodict):
         return Bishop(self.is_white, self.has_moved)

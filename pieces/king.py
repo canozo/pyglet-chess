@@ -2,6 +2,7 @@ from .piece import Piece
 from typing import List
 import itertools
 import pyglet
+from PIL import Image
 
 
 class King(Piece):
@@ -9,8 +10,10 @@ class King(Piece):
         super(King, self).__init__(is_white, has_moved)
         if self.is_white:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/king-w.png'))
+            self.pil_img = Image.open('resources/king-w.png')
         else:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/king-b.png'))
+            self.pil_img = Image.open('resources/king-b.png')
 
     def __deepcopy__(self, memodict):
         return King(self.is_white, self.has_moved)

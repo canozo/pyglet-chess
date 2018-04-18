@@ -383,3 +383,28 @@ class Board:
             if self.gatekeeper(j, i, l, k, True, 'rook'):
                 moves.append((j, i, l, k))
         return moves
+
+    def evaluate(self) -> int:
+        # score based on the white side
+        score = 0
+        for i, j in itertools.product(range(8), repeat=2):
+            piece_value = 0
+            piece = self.chessboard[i][j]
+            if piece is None:
+                continue
+            if isinstance(piece, Pawn):
+                piece_value = 10
+            elif isinstance(piece, Knight):
+                piece_value = 30
+            elif isinstance(piece, Bishop):
+                piece_value = 32
+            elif isinstance(piece, Rook):
+                piece_value = 50
+            elif isinstance(piece, Queen):
+                piece_value = 90
+            elif isinstance(piece, King):
+                piece_value = 900
+            if not piece.is_white:
+                piece_value *= -1
+            score += piece_value
+        return score

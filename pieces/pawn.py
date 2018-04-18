@@ -1,6 +1,7 @@
 from .piece import Piece
 from typing import List
 import pyglet
+from PIL import Image
 
 
 class Pawn(Piece):
@@ -8,8 +9,10 @@ class Pawn(Piece):
         super(Pawn, self).__init__(is_white, has_moved)
         if self.is_white:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/pawn-w.png'))
+            self.pil_img = Image.open('resources/pawn-w.png')
         else:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/pawn-b.png'))
+            self.pil_img = Image.open('resources/pawn-b.png')
 
     def __deepcopy__(self, memodict):
         return Pawn(self.is_white, self.has_moved)

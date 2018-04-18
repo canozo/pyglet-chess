@@ -79,14 +79,20 @@ def on_mouse_release(x, y, button, modifiers):
 
 
 @game_window.event
+def on_text(text):
+    if text == 'm':
+        match.ai_move()
+    elif text == 'u':
+        match.undo()
+
+
+@game_window.event
 def on_key_press(symbol, modifiers):
     global match, promotion, ai_mode
     if symbol == key.N:
         match = Chess()
     elif symbol == key.A:
         ai_mode = not ai_mode
-    elif symbol == key.U:
-        match.board.undo()
     elif symbol == key.Q:
         promotion = 'queen'
     elif symbol == key.B:

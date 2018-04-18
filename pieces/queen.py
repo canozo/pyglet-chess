@@ -1,6 +1,7 @@
 from .piece import Piece
 from typing import List, Tuple
 import pyglet
+from PIL import Image
 
 
 class Queen(Piece):
@@ -8,8 +9,10 @@ class Queen(Piece):
         super(Queen, self).__init__(is_white, has_moved)
         if self.is_white:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/queen-w.png'))
+            self.pil_img = Image.open('resources/queen-w.png')
         else:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/queen-b.png'))
+            self.pil_img = Image.open('resources/queen-b.png')
 
     def __deepcopy__(self, memodict):
         return Queen(self.is_white, self.has_moved)

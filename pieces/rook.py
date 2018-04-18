@@ -1,6 +1,7 @@
 from .piece import Piece
 from typing import List, Tuple
 import pyglet
+from PIL import Image
 
 
 class Rook(Piece):
@@ -8,8 +9,10 @@ class Rook(Piece):
         super(Rook, self).__init__(is_white, has_moved)
         if self.is_white:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/rook-w.png'))
+            self.pil_img = Image.open('resources/rook-w.png')
         else:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/rook-b.png'))
+            self.pil_img = Image.open('resources/rook-b.png')
 
     def __deepcopy__(self, memodict):
         return Rook(self.is_white, self.has_moved)
