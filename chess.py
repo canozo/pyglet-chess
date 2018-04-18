@@ -38,7 +38,7 @@ class Chess:
             best_move = random.choice(legal_moves)
 
             x, y, nx, ny = best_move
-            self.move(x, y, nx, ny, 'queen')
+            self.move(x, y, nx, ny, 'dick')
 
     def status(self) -> Tuple[bool, bool]:
         # returns the current status of the game (is game over, is stalemate)

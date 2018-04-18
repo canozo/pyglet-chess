@@ -32,7 +32,7 @@ def on_draw():
             piece = chessboard[y][x]
             if piece is not piece_held:
                 piece.img.x = x * 64
-                piece.img.y = y * 64
+                piece.img.y = 448 - y * 64
             piece.img.draw()
 
     gameover, stalemate = match.status()
@@ -52,10 +52,10 @@ def on_mouse_press(x, y, button, modifiers):
     global piece_held, old_pos
     if button == mouse.LEFT and not match.gameover:
         chessboard = match.board.chessboard
-        piece = chessboard[y//64][x//64]
+        piece = chessboard[7 - y//64][x//64]
         if piece is not None:
             piece_held = piece
-            old_pos = (x//64, y//64)
+            old_pos = (x//64, 7 - y//64)
 
 
 @game_window.event
@@ -69,7 +69,7 @@ def on_mouse_drag(x, y, dx, dy, buttons, modifiers):
 def on_mouse_release(x, y, button, modifiers):
     global piece_held
     if piece_held is not None:
-        dx, dy = x//64, y//64
+        dx, dy = x//64, 7 - y//64
         ox, oy = old_pos
         error = match.move(ox, oy, dx, dy, promotion)
         if not error and ai_mode:
