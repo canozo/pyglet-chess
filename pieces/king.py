@@ -2,21 +2,18 @@ from .piece import Piece
 from typing import List
 import itertools
 import pyglet
-from PIL import Image
 
 
 class King(Piece):
-    def __init__(self, is_white: bool, has_moved: bool=False):
-        super(King, self).__init__(is_white, has_moved)
+    def __init__(self, is_white: bool):
+        super(King, self).__init__(is_white)
         if self.is_white:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/king-w.png'))
-            self.pil_img = Image.open('resources/king-w.png')
         else:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/king-b.png'))
-            self.pil_img = Image.open('resources/king-b.png')
 
     def __deepcopy__(self, memodict):
-        return King(self.is_white, self.has_moved)
+        return King(self.is_white)
 
     def check_laser(self, chessboard, x, y, check_mode):
         return []

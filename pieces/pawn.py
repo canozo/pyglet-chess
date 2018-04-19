@@ -1,21 +1,18 @@
 from .piece import Piece
 from typing import List
 import pyglet
-from PIL import Image
 
 
 class Pawn(Piece):
-    def __init__(self, is_white: bool, has_moved: bool=False):
-        super(Pawn, self).__init__(is_white, has_moved)
+    def __init__(self, is_white: bool):
+        super(Pawn, self).__init__(is_white)
         if self.is_white:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/pawn-w.png'))
-            self.pil_img = Image.open('resources/pawn-w.png')
         else:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/pawn-b.png'))
-            self.pil_img = Image.open('resources/pawn-b.png')
 
     def __deepcopy__(self, memodict):
-        return Pawn(self.is_white, self.has_moved)
+        return Pawn(self.is_white)
 
     def check_laser(self, chessboard, x, y, check_mode):
         return []
@@ -31,7 +28,9 @@ class Pawn(Piece):
             return True
         elif dx == 1 and dy == 1 and piece_in_path:
             return True
-        elif dx == 0 and dy == 2 and not piece_in_path and not self.has_moved:
+        elif dx == 0 and dy == 2 and not piece_in_path and self.is_white and y == 6:
+            return True
+        elif dx == 0 and dy == 2 and not piece_in_path and not self.is_white and y == 1:
             return True
 
         return False

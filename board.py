@@ -67,6 +67,8 @@ class Board:
     def gatekeeper(self, x: int, y: int, nx: int, ny: int, review_mode: bool, promote_to: str=None) -> bool:
         legal = True
         flag_ep = False
+        en_passant_x = -1
+        en_passant_y = -1
         piece = self.chessboard[y][x]
         destination = self.chessboard[ny][nx]
 
@@ -121,11 +123,11 @@ class Board:
             # get ready for a possible en passant on next turn
             if not review_mode and legal and isinstance(piece, Pawn) and abs(y-ny) == 2:
                 flag_ep = True
-                self.en_passant_x = x
-                if self.white_turn and self.black_controlled[y-1][x]:
-                    self.en_passant_y = y-1
-                elif not self.white_turn and self.white_controlled[y+1][x]:
-                    self.en_passant_y = y+1
+                en_passant_x = x
+                if self.white_turn:
+                    en_passant_y = y-1
+                elif not self.white_turn:
+                    en_passant_y = y+1
 
             # if the player is in check, see if he manages to get out of check
             if legal and self.check():
@@ -160,12 +162,14 @@ class Board:
                 self.en_passant = False
 
             if flag_ep:
+                self.en_passant_x = en_passant_x
+                self.en_passant_y = en_passant_y
                 self.en_passant = True
 
         return legal
 
     def execute(self, x: int, y: int, nx: int, ny: int, promote_to: str) -> None:
-        game_state = (copy.deepcopy(self.chessboard),
+        game_state = (self.shittycopy(),
                       self.white_turn,
                       self.en_passant,
                       self.en_passant_x,
@@ -202,12 +206,17 @@ class Board:
                 self.chessboard[ny][nx] = Rook(self.white_turn)
 
         else:
-            self.chessboard[y][x].has_moved = True
             self.chessboard[ny][nx] = self.chessboard[y][x]
 
         self.white_turn = not self.white_turn
         self.chessboard[y][x] = None
         self.update_controlled()
+
+    def shittycopy(self):
+        chessboard = [[None for _ in range(8)] for _ in range(8)]
+        for i, j in itertools.product(range(8), repeat=2):
+            chessboard[i][j] = self.chessboard[i][j]
+        return chessboard
 
     def undo(self):
         if len(self.history) > 0:
@@ -252,8 +261,9 @@ class Board:
         if self.chessboard[y][rook_x] is None:
             return False
 
-        if self.chessboard[y][rook_x].has_moved or self.chessboard[y][x].has_moved:
-            return False
+        # TODO remove the has_moved
+        # if self.chessboard[y][rook_x].has_moved or self.chessboard[y][x].has_moved:
+        #     return False
 
         if self.jumps(x, y, rook_x, ny):
             return False

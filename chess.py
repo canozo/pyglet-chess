@@ -2,9 +2,7 @@ from typing import Tuple
 import random
 import board
 
-from PIL import Image
-import itertools
-import os
+import time
 
 
 class Chess:
@@ -12,33 +10,10 @@ class Chess:
         self.board = board.Board()
         self.gameover = False
 
-        self.board_normal_img = Image.open('resources/board-normal.png')
-        self.img_count = 0
-
-    def save_img(self, x: int, y: int, nx: int, ny: int):
-        lx = 'abcdefgh'[x]
-        ly = '87654321'[y]
-        lnx = 'abcdefgh'[nx]
-        lny = '87654321'[ny]
-        self.img_count += 1
-        normal_board = f'temp/{self.img_count} - {lx}{ly} {lnx}{lny}.png'
-        result_normal = Image.new('RGBA', (512, 512), (0, 0, 0, 0))
-        result_normal.paste(self.board_normal_img, (0, 0))
-        chessboard = self.board.chessboard
-
-        for y, x in itertools.product(range(8), repeat=2):
-            if chessboard[y][x] is not None:
-                piece_img = chessboard[y][x].pil_img
-                result_normal.paste(piece_img, (x * 64, y * 64), mask=piece_img)
-
-        if not os.path.isdir('temp/'):
-            os.makedirs('temp/')
-
-        result_normal.save(normal_board)
+        self.operations = 0
 
     def move(self, x: int, y: int, nx: int, ny: int, promote_to: str=None) -> int:
         if not self.board.gatekeeper(x, y, nx, ny, False, promote_to):
-            self.save_img(x, y, nx, ny)
             # illegal move
             return 1
 
@@ -54,16 +29,23 @@ class Chess:
             return 0
 
     def ai_move(self, depth: int=3):
-        # best_val, best_move = self.minimax(depth)
-        legal_moves = self.board.get_legal_moves()
-        if len(legal_moves) > 0:
-            best_move = random.choice(legal_moves)
+        self.operations = 0
+        start_time = time.time()
+        best_val, best_move = self.minimax(depth)
+        elapsed = time.time() - start_time
+        print(f'{self.operations} operations done in {elapsed} seconds, {self.operations//elapsed} ops/s')
+        if best_move is not None:
             x, y, nx, ny = best_move
             self.move(x, y, nx, ny, 'queen')
+        else:
+            print('I think the AI lost')
 
     def minimax(self, depth, alpha: int=-90000, beta: int=90000, is_max: bool=True):
-        if depth == 0:
+        self.operations += 1
+        if depth == 0 and not is_max:
             return -self.board.evaluate(), None
+        elif depth == 0 and is_max:
+            return self.board.evaluate(), None
 
         best_move = None
         legal_moves = self.board.get_legal_moves()
@@ -76,7 +58,7 @@ class Chess:
 
         for move in legal_moves:
             x, y, nx, ny = move
-            self.move(x, y, nx, ny)
+            self.move(x, y, nx, ny, 'queen')
             value, _ = self.minimax(depth-1, alpha, beta, not is_max)
             self.undo()
 
@@ -94,7 +76,7 @@ class Chess:
             if beta <= alpha:
                 break
 
-        return best_move_val, best_move or legal_moves[0]
+        return best_move_val, best_move
 
     def undo(self):
         self.gameover = False

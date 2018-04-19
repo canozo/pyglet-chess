@@ -1,21 +1,18 @@
 from .piece import Piece
 from typing import List, Tuple
 import pyglet
-from PIL import Image
 
 
 class Rook(Piece):
-    def __init__(self, is_white: bool, has_moved: bool=False):
-        super(Rook, self).__init__(is_white, has_moved)
+    def __init__(self, is_white: bool):
+        super(Rook, self).__init__(is_white)
         if self.is_white:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/rook-w.png'))
-            self.pil_img = Image.open('resources/rook-w.png')
         else:
             self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/rook-b.png'))
-            self.pil_img = Image.open('resources/rook-b.png')
 
     def __deepcopy__(self, memodict):
-        return Rook(self.is_white, self.has_moved)
+        return Rook(self.is_white)
 
     def check_laser(self, chessboard: List[List[Piece]], x: int, y: int,
                     check_mode: bool=False) -> List[Tuple[int, int]]:
