@@ -1,4 +1,4 @@
-from chess import Chess
+from match import Match
 from pyglet.window import mouse
 from pyglet.window import key
 import pyglet
@@ -15,7 +15,7 @@ message_label = pyglet.text.Label(font_name='Times New Roman',
                                   anchor_y='center')
 board_normal = pyglet.sprite.Sprite(pyglet.image.load('resources/board-normal.png'))
 piece_held = None
-match = Chess()
+match = Match()
 ai_mode = False
 promotion = None
 old_pos = (0, 0)
@@ -90,7 +90,7 @@ def on_text(text):
 def on_key_press(symbol, modifiers):
     global match, promotion, ai_mode
     if symbol == key.N:
-        match = Chess()
+        match = Match()
     elif symbol == key.A:
         ai_mode = not ai_mode
     elif symbol == key.Q:
