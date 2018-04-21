@@ -1,32 +1,25 @@
 from .piece import Piece
 from typing import List, Tuple
-import pyglet
 
 
 class Queen(Piece):
-    def __init__(self, is_white: bool):
-        super(Queen, self).__init__(is_white)
-        if self.is_white:
-            self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/queen-w.png'))
-        else:
-            self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/queen-b.png'))
-
-    def __deepcopy__(self, memodict):
-        return Queen(self.is_white)
-
-    def check_laser(self, chessboard: List[List[Piece]], x: int, y: int,
-                    check_mode: bool=False) -> List[Tuple[int, int]]:
-        laser = self.get_laser((-1, 0, 1, 0, -1), chessboard, x, y, check_mode)
+    @staticmethod
+    def check_laser(chessboard: List[List[str]], x: int, y: int,
+                    is_white: bool, check_mode: bool=False) -> List[Tuple[int, int]]:
+        laser = Piece.get_laser((-1, 0, 1, 0, -1), chessboard, x, y, is_white, check_mode)
         if len(laser) > 0:
             return laser
         else:
-            return self.get_laser((-1, -1, 1, 1, -1), chessboard, x, y, check_mode)
+            return Piece.get_laser((-1, -1, 1, 1, -1), chessboard, x, y, is_white, check_mode)
 
-    def can_move(self, x: int, y: int, new_x: int, new_y: int, piece_in_path: bool) -> bool:
+    @staticmethod
+    def can_move(x: int, y: int, new_x: int, new_y: int, piece_in_path: bool, is_white: bool) -> bool:
         dx = abs(x-new_x)
         dy = abs(y-new_y)
         return dx == dy or (dx == 0 and dy != 0) or (dx != 0 and dy == 0)
 
-    def controlled(self, table: List[List[bool]], chessboard: List[List[Piece]], x: int, y: int) -> List[List[bool]]:
-        table = self.possible_moves((-1, 0, 1, 0, -1), table, chessboard, x, y)
-        return self.possible_moves((-1, -1, 1, 1, -1), table, chessboard, x, y)
+    @staticmethod
+    def controlled(table: List[List[bool]], chessboard: List[List[str]],
+                   x: int, y: int, is_white: bool) -> List[List[bool]]:
+        table = Piece.possible_moves((-1, 0, 1, 0, -1), table, chessboard, x, y)
+        return Piece.possible_moves((-1, -1, 1, 1, -1), table, chessboard, x, y)

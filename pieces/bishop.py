@@ -1,25 +1,18 @@
 from .piece import Piece
 from typing import List, Tuple
-import pyglet
 
 
 class Bishop(Piece):
-    def __init__(self, is_white: bool):
-        super(Bishop, self).__init__(is_white)
-        if self.is_white:
-            self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/bishop-w.png'))
-        else:
-            self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/bishop-b.png'))
+    @staticmethod
+    def check_laser(chessboard: List[List[str]], x: int, y: int,
+                    is_white: bool, check_mode: bool=False) -> List[Tuple[int, int]]:
+        return Piece.get_laser((-1, -1, 1, 1, -1), chessboard, x, y, is_white, check_mode)
 
-    def __deepcopy__(self, memodict):
-        return Bishop(self.is_white)
-
-    def check_laser(self, chessboard: List[List[Piece]], x: int, y: int,
-                    check_mode: bool=False) -> List[Tuple[int, int]]:
-        return self.get_laser((-1, -1, 1, 1, -1), chessboard, x, y, check_mode)
-
-    def can_move(self, x: int, y: int, new_x: int, new_y: int, piece_in_path: bool) -> bool:
+    @staticmethod
+    def can_move(x: int, y: int, new_x: int, new_y: int, piece_in_path: bool, is_white: bool) -> bool:
         return abs(x-new_x) == abs(y-new_y)
 
-    def controlled(self, table: List[List[bool]], chessboard: List[List[Piece]], x: int, y: int) -> List[List[bool]]:
-        return self.possible_moves((-1, -1, 1, 1, -1), table, chessboard, x, y)
+    @staticmethod
+    def controlled(table: List[List[bool]], chessboard: List[List[str]],
+                   x: int, y: int, is_white: bool) -> List[List[bool]]:
+        return Piece.possible_moves((-1, -1, 1, 1, -1), table, chessboard, x, y)

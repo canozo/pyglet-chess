@@ -1,30 +1,25 @@
 from .piece import Piece
-from typing import List
+from typing import List, Tuple
 import itertools
-import pyglet
+# pyglet.sprite.Sprite(pyglet.image.load('resources/king-w.png'))
 
 
 class King(Piece):
-    def __init__(self, is_white: bool):
-        super(King, self).__init__(is_white)
-        if self.is_white:
-            self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/king-w.png'))
-        else:
-            self.img = pyglet.sprite.Sprite(pyglet.image.load('resources/king-b.png'))
-
-    def __deepcopy__(self, memodict):
-        return King(self.is_white)
-
-    def check_laser(self, chessboard, x, y, check_mode):
+    @staticmethod
+    def check_laser(chessboard: List[List[str]], x: int, y: int,
+                    is_white: bool, check_mode: bool=False) -> List[Tuple[int, int]]:
         return []
 
-    def can_move(self, x: int, y: int, new_x: int, new_y: int, piece_in_path: bool) -> bool:
+    @staticmethod
+    def can_move(x: int, y: int, new_x: int, new_y: int, piece_in_path: bool, is_white: bool) -> bool:
         dx = abs(x-new_x)
         dy = abs(y-new_y)
         return (dx == dy == 1) or (dx == 0 and dy == 1) or (dx == 1 and dy == 0)
 
-    def controlled(self, table: List[List[bool]], chessboard: List[List[Piece]], x: int, y: int) -> List[List[bool]]:
+    @staticmethod
+    def controlled(table: List[List[bool]], chessboard: List[List[str]],
+                   x: int, y: int, is_white: bool) -> List[List[bool]]:
         for i, j in itertools.product(range(8), repeat=2):
-            if self.can_move(x, y, j, i, False):
+            if King.can_move(x, y, j, i, False, is_white):
                 table[i][j] = True
         return table
