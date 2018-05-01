@@ -38,7 +38,7 @@ def on_draw():
     game_window.clear()
     board_normal.draw()
     chessboard = match.board.chessboard
-    update_board()
+    # update_board()
     for x, y in itertools.product(range(8), repeat=2):
         if chessboard[y][x] != '':
             piece = board_imgs[y][x]
@@ -85,8 +85,10 @@ def on_mouse_release(x, y, button, modifiers):
         dx, dy = x//64, 7 - y//64
         ox, oy = old_pos
         error = match.move(ox, oy, dx, dy, promotion)
+        update_board()
         if not error and ai_mode:
             match.ai_move()
+            update_board()
 
     piece_held = None
 
@@ -97,6 +99,7 @@ def on_text(text):
         match.ai_move()
     elif text == 'u':
         match.undo()
+        update_board()
 
 
 @game_window.event
@@ -104,6 +107,7 @@ def on_key_press(symbol, modifiers):
     global match, promotion, ai_mode
     if symbol == key.N:
         match = Match()
+        update_board()
     elif symbol == key.A:
         ai_mode = not ai_mode
     elif symbol == key.Q:

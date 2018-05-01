@@ -21,14 +21,6 @@ class Chess:
         self.black_controlled = None  # type: List[List[bool]]
         self.chessboard = [['' for _ in range(8)] for _ in range(8)]  # type: List[List[str]]
 
-        # fuck me in the ass:
-        self.white_king_moved = False
-        self.white_right_rook_moved = False
-        self.white_left_rook_moved = False
-        self.black_k_moved = False
-        self.black_right_rook_moved = False
-        self.black_left_rook_moved = False
-
         # initial position
         self.chessboard[0][0] = 'r'
         self.chessboard[0][1] = 'n'

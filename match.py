@@ -42,10 +42,10 @@ class Match:
 
     def minimax(self, depth: int, alpha: int=-90000, beta: int=90000, is_max: bool=True, root: bool=False):
         self.operations += 1
-        if depth == 0 and not is_max:
+        if depth == 0:
             return -self.board.evaluate(), None
-        elif depth == 0 and is_max:
-            return self.board.evaluate(), None
+        # elif depth == 0 and is_max:
+        #     return self.board.evaluate(), None
 
         best_move = None
         legal_moves = self.board.get_legal_moves()
