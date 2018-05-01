@@ -1,7 +1,6 @@
 from .piece import Piece
 from typing import List, Tuple
 import itertools
-# pyglet.sprite.Sprite(pyglet.image.load('resources/king-w.png'))
 
 
 class King(Piece):

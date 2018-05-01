@@ -17,7 +17,7 @@ class Piece(ABC):
 
             while 0 <= count_x <= 7 and 0 <= count_y <= 7:
                 piece = chessboard[count_y][count_x]
-                if piece is not None:
+                if piece != '':
                     if piece.isupper() == is_white:
                         break
                     elif check_mode and piece.upper() == 'K' and piece_count == 0:
@@ -45,7 +45,7 @@ class Piece(ABC):
 
             while 0 <= count_x <= 7 and 0 <= count_y <= 7 and not exit_loop:
                 piece = chessboard[count_y][count_x]
-                exit_loop = piece is not None and piece.upper() != 'K'
+                exit_loop = piece != '' and piece.upper() != 'K'
                 table[count_y][count_x] = True
                 count_x += sum_x
                 count_y += sum_y
