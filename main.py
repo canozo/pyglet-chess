@@ -38,7 +38,6 @@ def on_draw():
     game_window.clear()
     board_normal.draw()
     chessboard = match.board.chessboard
-    # update_board()
     for x, y in itertools.product(range(8), repeat=2):
         if chessboard[y][x] != '':
             piece = board_imgs[y][x]
@@ -63,7 +62,6 @@ def on_draw():
 def on_mouse_press(x, y, button, modifiers):
     global piece_held, old_pos
     if button == mouse.LEFT and not match.gameover:
-        # update_board()
         chessboard = match.board.chessboard
         piece = chessboard[7 - y//64][x//64]
         if piece != '':

@@ -150,7 +150,7 @@ class Chess:
                 # block the attacking piece
                 elif destination == '':
                     ty, tx = attacking_pieces[0]
-                    if (ny, nx) not in self.check_block(tx, ty):
+                    if (ny, nx) not in self.check_block(tx, ty, not self.white_turn):
                         legal = False
 
         if not review_mode and legal:
@@ -281,12 +281,12 @@ class Chess:
 
         return True
 
-    def check_block(self, x: int, y: int) -> List[Tuple[int, int]]:
+    def check_block(self, x: int, y: int, is_white: bool) -> List[Tuple[int, int]]:
         laser = []
         piece = self.chessboard[y][x]
         if piece.upper() in ('Q', 'R', 'B'):
             piece_class = self.get_class(piece)
-            laser = piece_class.check_laser(self.chessboard, x, y, True)
+            laser = piece_class.check_laser(self.chessboard, x, y, is_white, True)
         return laser
 
     def check_laser(self, x: int, y: int, nx: int, ny: int) -> bool:
