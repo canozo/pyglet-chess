@@ -204,7 +204,7 @@ class Chess:
                 self.chessboard[ny][nx] = 'r'
 
             if self.white_turn:
-                self.chessboard[ny][nx].upper()
+                self.chessboard[ny][nx] = self.chessboard[ny][nx].upper()
 
         else:
             self.chessboard[ny][nx] = self.chessboard[y][x]
