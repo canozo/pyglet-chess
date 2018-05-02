@@ -4,6 +4,9 @@ from typing import List, Tuple
 
 
 class Piece(ABC):
+    eval_white = None
+    eval_black = None
+
     @staticmethod
     def get_laser(movements: Tuple[int, ...], chessboard: List[List[str]], x: int, y: int,
                   is_white: bool, check_mode: bool) -> List[Tuple[int, int]]:

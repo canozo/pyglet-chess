@@ -3,6 +3,17 @@ from typing import List, Tuple
 
 
 class Rook(Piece):
+    eval_white = [[0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0],
+                  [5.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,  5.0],
+                  [-5.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -5.0],
+                  [-5.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -5.0],
+                  [-5.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -5.0],
+                  [-5.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -5.0],
+                  [-5.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -5.0],
+                  [0.0,  0.0,  0.0,  5.0,  5.0,  0.0,  0.0,  0.0]]
+
+    eval_black = eval_white[::-1]
+
     @staticmethod
     def check_laser(chessboard: List[List[str]], x: int, y: int,
                     is_white: bool, check_mode: bool=False) -> List[Tuple[int, int]]:

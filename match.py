@@ -44,8 +44,6 @@ class Match:
         self.operations += 1
         if depth == 0:
             return -self.board.evaluate(), None
-        # elif depth == 0 and is_max:
-        #     return self.board.evaluate(), None
 
         best_move = None
         legal_moves = self.board.get_legal_moves()
@@ -54,14 +52,13 @@ class Match:
         if root and len(legal_moves) > 0:
             best_move = legal_moves[0]
 
+        best_move_val = 90000
         if is_max:
-            best_move_val = -90000
-        else:
-            best_move_val = 90000
+            best_move_val *= -1
 
         for move in legal_moves:
             x, y, nx, ny = move
-            self.move(x, y, nx, ny, 'queen')
+            self.board.execute(x, y, nx, ny, 'queen')
             value, _ = self.minimax(depth-1, alpha, beta, not is_max)
             self.undo()
 

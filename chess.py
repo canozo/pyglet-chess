@@ -63,9 +63,6 @@ class Chess:
 
     def gatekeeper(self, x: int, y: int, nx: int, ny: int, review_mode: bool, promote_to: str='') -> bool:
         legal = True
-        flag_ep = False
-        en_passant_x = -1
-        en_passant_y = -1
         piece = self.chessboard[y][x]
         destination = self.chessboard[ny][nx]
         piece_class = self.get_class(piece)
@@ -118,15 +115,6 @@ class Chess:
             else:
                 promote_to = ''
 
-            # get ready for a possible en passant on next turn
-            if not review_mode and legal and piece.upper() == 'P' and abs(y-ny) == 2:
-                flag_ep = True
-                en_passant_x = x
-                if self.white_turn:
-                    en_passant_y = y-1
-                elif not self.white_turn:
-                    en_passant_y = y+1
-
             # if the player is in check, see if he manages to get out of check
             if legal and self.check():
                 attacking_pieces = self.get_attacking()
@@ -156,14 +144,6 @@ class Chess:
         if not review_mode and legal:
             self.execute(x, y, nx, ny, promote_to)
 
-            if self.en_passant:
-                self.en_passant = False
-
-            if flag_ep:
-                self.en_passant_x = en_passant_x
-                self.en_passant_y = en_passant_y
-                self.en_passant = True
-
         return legal
 
     def execute(self, x: int, y: int, nx: int, ny: int, promote_to: str) -> None:
@@ -190,7 +170,8 @@ class Chess:
             else:
                 self.chessboard[ny-1][nx] = ''
 
-        if promote_to != '':
+        if promote_to != '' and self.chessboard[y][x].upper() == 'P'\
+                and ((self.white_turn and ny == 0) or (not self.white_turn and ny == 7)):
             if promote_to == 'queen':
                 self.chessboard[ny][nx] = 'q'
 
@@ -208,6 +189,18 @@ class Chess:
 
         else:
             self.chessboard[ny][nx] = self.chessboard[y][x]
+
+        if self.en_passant:
+            self.en_passant = False
+
+        # get ready for a possible en passant on next turn
+        if self.chessboard[ny][nx].upper() == 'P' and abs(y - ny) == 2:
+            self.en_passant = True
+            self.en_passant_x = x
+            if self.white_turn:
+                self.en_passant_y = y - 1
+            elif not self.white_turn:
+                self.en_passant_y = y + 1
 
         self.white_turn = not self.white_turn
         self.chessboard[y][x] = ''
@@ -422,7 +415,7 @@ class Chess:
         else:
             return Piece
 
-    def evaluate(self) -> int:
+    def evaluate(self) -> float:
         # score based on the white side
         score = 0
         for i, j in itertools.product(range(8), repeat=2):
@@ -430,19 +423,23 @@ class Chess:
             piece = self.chessboard[i][j]
             if piece == '':
                 continue
+            piece_class = self.get_class(piece)
             if piece.upper() == 'P':
                 piece_value = 10
             elif piece.upper() == 'N':
                 piece_value = 30
             elif piece.upper() == 'B':
-                piece_value = 32
+                piece_value = 30
             elif piece.upper() == 'R':
                 piece_value = 50
             elif piece.upper() == 'Q':
                 piece_value = 90
             elif piece.upper() == 'K':
                 piece_value = 900
-            if not piece.isupper():
+            if piece.isupper():
+                piece_value += piece_class.eval_white[i][j]
+            else:
+                piece_value += piece_class.eval_black[i][j]
                 piece_value *= -1
             score += piece_value
         return score
