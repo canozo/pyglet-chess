@@ -1,7 +1,6 @@
 from typing import Tuple
 import random
 import chess
-
 import time
 
 

@@ -16,7 +16,7 @@ board_normal = pyglet.sprite.Sprite(pyglet.image.load('resources/board-normal.pn
 board_imgs = [[None for _ in range(8)] for _ in range(8)]
 piece_held = None
 match = Match()
-ai_mode = False
+ai_mode = True
 promotion = None
 old_pos = (0, 0)
 
