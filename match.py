@@ -8,7 +8,6 @@ class Match:
     def __init__(self):
         self.board = chess.Chess()
         self.gameover = False
-
         self.operations = 0
 
     def move(self, x: int, y: int, nx: int, ny: int, promote_to: str=None) -> int:
