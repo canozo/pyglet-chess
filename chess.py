@@ -13,6 +13,7 @@ class Chess:
     def __init__(self):
         # game settings
         self.history = []
+        self.end_game = False
         self.white_turn = True
         self.en_passant = False
         self.en_passant_x = -1
@@ -205,6 +206,7 @@ class Chess:
         self.white_turn = not self.white_turn
         self.chessboard[y][x] = ''
         self.update_controlled()
+        # self.end_game = self.check_end_game()
 
     def shittycopy(self):
         chessboard = [['' for _ in range(8)] for _ in range(8)]
@@ -273,6 +275,9 @@ class Chess:
             i += increment
 
         return True
+
+    def check_end_game(self):
+        pass
 
     def check_block(self, x: int, y: int, is_white: bool) -> List[Tuple[int, int]]:
         laser = []

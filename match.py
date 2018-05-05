@@ -31,7 +31,9 @@ class Match:
         start_time = time.time()
         best_val, best_move = self.minimax(depth, root=True)
         elapsed = time.time() - start_time
-        print(f'{self.operations} operations done in {elapsed} seconds, {self.operations//elapsed} ops/s')
+        if elapsed > 0:
+            print(f'{self.operations} operations done in {elapsed} seconds, '
+                  f'{self.operations//elapsed} ops/s')
         if best_move is not None:
             x, y, nx, ny = best_move
             self.move(x, y, nx, ny, 'queen')
